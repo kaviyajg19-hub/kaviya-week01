@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_ASSETS 100
+
+// Asset details store panna Structure
+typedef struct {
+    char id[20];
+    char name[50];
+    char type[30];
+    char ipAddress[20];
+    char os[50];
+    char department[50];
+    char riskLevel[20];
+    char securityStatus[20];
+} Asset;
+
+void inputAssetDetails(Asset *asset, int index) {
+    printf("\nAsset %d\n", index + 1);
+    
+    printf("Asset ID: ");
+    scanf("%s", asset->id);
+    getchar(); // Buffer clear panna
+
+    printf("Asset Name: ");
+    fgets(asset->name, sizeof(asset->name), stdin);
+    asset->name[strcspn(asset->name, "\n")] = 0; // Newline remove panna
+
+    printf("Asset Type (Workstation/Server/Router/Switch/Application): ");
+    fgets(asset->type, sizeof(asset->type), stdin);
+    asset->type[strcspn(asset->type, "\n")] = 0;
+
+    printf("IP Address: ");
+    scanf("%s", asset->ipAddress);
+    getchar();
+
+    printf("Operating System: ");
+    fgets(asset->os, sizeof(asset->os), stdin);
+    asset->os[strcspn(asset->os, "\n")] = 0;
+
+    printf("Department: ");
+    fgets(asset->department, sizeof(asset->department), stdin);
+    asset->department[strcspn(asset->department, "\n")] = 0;
+
+    printf("Risk Level (Low/Medium/High/Critical): ");
+    scanf("%s", asset->riskLevel);
+
+    printf("Security Status (Secure/Warning/Vulnerable): ");
+    scanf("%s", asset->securityStatus);
+}
+
+void displayInventory(Asset assets[], int n) {
+    int criticalCount = 0;
+    int highCount = 0;
+    int mediumCount = 0;
+    int vulnerableCount = 0;
+
+    printf("\n=========================================\n");
+    printf("CYBERSECURITY ASSET INVENTORY\n");
+    printf("=========================================\n");
+
+    for (int i = 0; i < n; i++) {
+        printf("Asset ID : %s\n", assets[i].id);
+        printf("Asset Name : %s\n", assets[i].name);
+        printf("Asset Type : %s\n", assets[i].type);
+        printf("IP Address : %s\n", assets[i].ipAddress);
+        printf("OS : %s\n", assets[i].os);
+        printf("Department : %s\n", assets[i].department);
+        printf("Risk Level : %s\n", assets[i].riskLevel);
+        printf("Status : %s\n", assets[i].securityStatus);
+
+        if (i < n - 1) {
+            printf("-----------------------------------------\n");
+        }
+
+        // Count calculation
+        if (strcmp(assets[i].riskLevel, "Critical") == 0) criticalCount++;
+        else if (strcmp(assets[i].riskLevel, "High") == 0) highCount++;
+        else if (strcmp(assets[i].riskLevel, "Medium") == 0) mediumCount++;
+
+        if (strcmp(assets[i].securityStatus, "Vulnerable") == 0) vulnerableCount++;
+    }
+
+    printf("=========================================\n");
+    printf("Total Assets : %d\n", n);
+    printf("Critical Assets : %d\n", criticalCount);
+    printf("High Risk Assets : %d\n", highCount);
+    printf("Medium Risk Assets : %d\n", mediumCount);
+    printf("Vulnerable Assets : %d\n", vulnerableCount);
+    printf("=========================================\n");
+}
+
+int main() {
+    int n;
+    Asset assets[MAX_ASSETS];
+
+    printf("Enter number of assets: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        inputAssetDetails(&assets[i], i);
+    }
+
+    displayInventory(assets, n);
+
+    return 0;
+}
